@@ -139,6 +139,19 @@ the email. The following tags are available on a standard Patchwork install:
 
       Reviewed-by: Stephen Finucane <stephen@that.guru>
 
+Patchwork includes an optional built-in tag for declaring dependencies between
+series. The message ID of a patch or a cover letter, or the web URL to a patch
+or a series may be used to indicate a dependency. This tag is disabled for
+projects by default, and may be enabled by setting the ``parse_dependencies``
+flag to ``True``. When enabled, this may be included in the cover letter or any
+patch file of a series to declare a dependency:
+
+``Depends-on:``
+  For example::
+
+    Depends-on: <20240726221429.221611-1-user@example.com>
+    Depends-on: https://pw.example.com/project/myproject/list?series=1234
+
 The available tags, along with the significance of said tags, varies from
 project to project and Patchwork instance to Patchwork instance. The `kernel
 project documentation`__ provides an overview of the supported tags for the
