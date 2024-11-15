@@ -170,7 +170,7 @@ class BundleUpdateTest(BundleTestBase):
         self.assertEqual(bundle.public, not self.bundle.public)
 
         # check other forms for errors
-        formname = 'patchform'
+        formname = 'patch_form'
         if formname not in response.context:
             return
         form = response.context[formname]
@@ -222,7 +222,6 @@ class BundlePublicViewMboxTest(BundlePublicViewTest):
 
 
 class BundlePublicModifyTest(BundleTestBase):
-
     """Ensure that non-owners can't modify bundles"""
 
     def setUp(self):
@@ -275,7 +274,6 @@ class BundlePublicModifyTest(BundleTestBase):
 
 
 class BundlePrivateViewTest(BundleTestBase):
-
     """Ensure that non-owners can't view private bundles"""
 
     def setUp(self):
@@ -306,7 +304,6 @@ class BundlePrivateViewTest(BundleTestBase):
 
 @override_settings(ENABLE_REST_API=True)
 class BundlePrivateViewMboxTest(BundlePrivateViewTest):
-
     """Ensure that non-owners can't view private bundle mboxes"""
 
     def setUp(self):
@@ -371,8 +368,8 @@ class BundleCreateFromListTest(BundleTestBase):
     def test_create_empty_bundle(self):
         newbundlename = 'testbundle-new'
         params = {
-            'form': 'patchlistform',
-            'bundle_name': newbundlename,
+            'form': 'patch-list-form',
+            'name': newbundlename,
             'action': 'Create',
             'project': self.project.id,
         }
@@ -391,8 +388,8 @@ class BundleCreateFromListTest(BundleTestBase):
         patch = self.patches[0]
 
         params = {
-            'form': 'patchlistform',
-            'bundle_name': newbundlename,
+            'form': 'patch-list-form',
+            'name': newbundlename,
             'action': 'Create',
             'project': self.project.id,
             'patch_id:%d' % patch.id: 'checked',
@@ -420,8 +417,8 @@ class BundleCreateFromListTest(BundleTestBase):
         n_bundles = Bundle.objects.count()
 
         params = {
-            'form': 'patchlistform',
-            'bundle_name': '',
+            'form': 'patch-list-form',
+            'name': '',
             'action': 'Create',
             'project': self.project.id,
             'patch_id:%d' % patch.id: 'checked',
@@ -446,8 +443,8 @@ class BundleCreateFromListTest(BundleTestBase):
         patch = self.patches[0]
 
         params = {
-            'form': 'patchlistform',
-            'bundle_name': newbundlename,
+            'form': 'patch-list-form',
+            'name': newbundlename,
             'action': 'Create',
             'project': self.project.id,
             'patch_id:%d' % patch.id: 'checked',
@@ -478,7 +475,9 @@ class BundleCreateFromListTest(BundleTestBase):
         )
 
         self.assertNotContains(response, 'Bundle %s created' % newbundlename)
-        self.assertContains(response, 'You already have a bundle called')
+        self.assertContains(
+            response, 'A bundle called %s already exists' % newbundlename
+        )
         self.assertEqual(Bundle.objects.count(), n_bundles)
         self.assertEqual(bundle.patches.count(), 1)
 
@@ -488,7 +487,7 @@ class BundleCreateFromPatchTest(BundleTestBase):
         newbundlename = 'testbundle-new'
         patch = self.patches[0]
 
-        params = {'name': newbundlename, 'action': 'createbundle'}
+        params = {'name': newbundlename, 'action': 'Create'}
 
         response = self.client.post(
             reverse(
@@ -511,7 +510,7 @@ class BundleCreateFromPatchTest(BundleTestBase):
         newbundlename = self.bundle.name
         patch = self.patches[0]
 
-        params = {'name': newbundlename, 'action': 'createbundle'}
+        params = {'name': newbundlename, 'action': 'Create'}
 
         response = self.client.post(
             reverse(
@@ -535,7 +534,7 @@ class BundleAddFromListTest(BundleTestBase):
     def test_add_to_empty_bundle(self):
         patch = self.patches[0]
         params = {
-            'form': 'patchlistform',
+            'form': 'patch-list-form',
             'action': 'Add',
             'project': self.project.id,
             'bundle_id': self.bundle.id,
@@ -560,7 +559,7 @@ class BundleAddFromListTest(BundleTestBase):
         self.bundle.append_patch(self.patches[0])
         patch = self.patches[1]
         params = {
-            'form': 'patchlistform',
+            'form': 'patch-list-form',
             'action': 'Add',
             'project': self.project.id,
             'bundle_id': self.bundle.id,
@@ -595,7 +594,7 @@ class BundleAddFromListTest(BundleTestBase):
         patch = self.patches[0]
 
         params = {
-            'form': 'patchlistform',
+            'form': 'patch-list-form',
             'action': 'Add',
             'project': self.project.id,
             'bundle_id': self.bundle.id,
@@ -620,7 +619,7 @@ class BundleAddFromListTest(BundleTestBase):
         patch = self.patches[0]
 
         params = {
-            'form': 'patchlistform',
+            'form': 'patch-list-form',
             'action': 'Add',
             'project': self.project.id,
             'bundle_id': self.bundle.id,
@@ -647,7 +646,7 @@ class BundleAddFromListTest(BundleTestBase):
 class BundleAddFromPatchTest(BundleTestBase):
     def test_add_to_empty_bundle(self):
         patch = self.patches[0]
-        params = {'action': 'addtobundle', 'bundle_id': self.bundle.id}
+        params = {'action': 'Add', 'bundle_id': self.bundle.id}
 
         response = self.client.post(
             reverse(
@@ -662,7 +661,7 @@ class BundleAddFromPatchTest(BundleTestBase):
 
         self.assertContains(
             response,
-            'added to bundle &quot;%s&quot;' % self.bundle.name,
+            'added to bundle %s' % self.bundle.name,
             count=1,
         )
 
@@ -672,7 +671,7 @@ class BundleAddFromPatchTest(BundleTestBase):
     def test_add_to_non_empty_bundle(self):
         self.bundle.append_patch(self.patches[0])
         patch = self.patches[1]
-        params = {'action': 'addtobundle', 'bundle_id': self.bundle.id}
+        params = {'action': 'Add', 'bundle_id': self.bundle.id}
 
         response = self.client.post(
             reverse(
@@ -687,7 +686,7 @@ class BundleAddFromPatchTest(BundleTestBase):
 
         self.assertContains(
             response,
-            'added to bundle &quot;%s&quot;' % self.bundle.name,
+            'added to bundle %s' % self.bundle.name,
             count=1,
         )
 
@@ -704,7 +703,6 @@ class BundleAddFromPatchTest(BundleTestBase):
 
 
 class BundleInitialOrderTest(BundleTestBase):
-
     """When creating bundles from a patch list, ensure that the patches in the
     bundle are ordered by date"""
 
@@ -727,8 +725,8 @@ class BundleInitialOrderTest(BundleTestBase):
 
         # need to define our querystring explicity to enforce ordering
         params = {
-            'form': 'patchlistform',
-            'bundle_name': newbundlename,
+            'form': 'patch-list-form',
+            'name': newbundlename,
             'action': 'Create',
             'project': self.project.id,
         }
@@ -785,7 +783,7 @@ class BundleReorderTest(BundleTestBase):
 
         slice_ids = neworder_ids[start:end]
         params = {
-            'form': 'reorderform',
+            'form': 'reorder-form',
             'order_start': firstpatch.id,
             'neworder': slice_ids,
         }

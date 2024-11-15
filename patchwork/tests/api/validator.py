@@ -7,7 +7,7 @@ import os
 import re
 
 from django.urls import resolve
-import openapi_core
+import jsonschema_path
 from openapi_core.contrib.django import DjangoOpenAPIRequest
 from openapi_core.contrib.django import DjangoOpenAPIResponse
 from openapi_core.exceptions import OpenAPIError
@@ -88,7 +88,7 @@ def _load_spec(version):
     with open(spec_path, 'r') as fh:
         data = yaml.load(fh, Loader=yaml.SafeLoader)
 
-    _LOADED_SPECS[version] = openapi_core.Spec.from_dict(data)
+    _LOADED_SPECS[version] = jsonschema_path.SchemaPath.from_dict(data)
 
     return _LOADED_SPECS[version]
 

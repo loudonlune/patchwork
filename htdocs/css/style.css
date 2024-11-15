@@ -17,7 +17,7 @@ h2 a, h2 span {
 }
 
 pre {
-    line-height: 110%;
+    line-height: normal;
     background-color: white;
     border-radius: 0;
 }
@@ -54,6 +54,34 @@ pre {
 
 .navbar-subbrand {
     color: #999;
+}
+
+ul.dropdown-menu > li > form {
+    display: block;
+    width: 100%;
+}
+
+ul.dropdown-menu > li > form > button {
+    /* taken from bootstrap's styling for '.dropdown-menu > li > a' */
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+    width: 100%;
+    text-align: left;
+}
+
+ul.dropdown-menu > li > form > button:hover {
+    /* taken from bootstrap's styling for '.dropdown-menu > li > a:hover' */
+    color: #262626;
+    text-decoration: none;
+    background-color: #f5f5f5;
 }
 
 form {
@@ -134,25 +162,21 @@ table.pw-list > thead {
     background-color: white;
 }
 
-a.colinactive, a.colactive {
+a.col-inactive, a.col-active {
     color: black;
     text-decoration: none;
 }
 
-a.colinactive:hover {
+a.col-inactive:hover {
     color: red;
 }
 
 div.filters {
 }
 
-div.patchforms {
-    margin-top: 1em;
-}
-
 /* list order manipulation */
 
-table.patchlist tr.draghover {
+table.patch-list tr.draghover {
     background: #e8e8e8 !important;
 }
 
@@ -173,7 +197,7 @@ input#reorder-change {
 .paginator {
     text-align: right;
     clear: both;
-        margin: 8px 0 15px;
+    margin: 16px 0;
 }
 
 .paginator .prev-na,
@@ -228,7 +252,7 @@ table.patch-meta tr th, table.patch-meta tr td {
 }
 
 /* checks forms */
-/* TODO(stephenfin): Merge this with 'div.patchform' rules */
+/* TODO(stephenfin): Merge this with 'div.patch-form' rules */
 .checks {
     border: 1px solid gray;
     margin: 0.5em 1em;
@@ -354,15 +378,15 @@ button[class^=comment-action] {
 }
 
 .quote {
-    color: #007f00;
+    color: #365cb5;
 }
 
-span.p_header    { color: #2e8b57; font-weight: bold; }
-span.p_chunk    { color: #a52a2a; font-weight: bold; }
-span.p_context    { color: #a020f0; }
-span.p_add    { color: #008b8b; }
-span.p_del    { color: #6a5acd; }
-span.p_mod    { color: #0000ff; }
+span.p_header    { font-weight: bold; }
+span.p_chunk    { color: #329fb0; font-weight: bold; }
+span.p_context    { }
+span.p_add    { color: #1b9d09; background-color: #edffed; }
+span.p_del    { color: #c80101; background-color: #ffe2e2; }
+span.p_mod    { color: #a020f0; }
 
 .acked-by {
     color: #2d4566;
@@ -405,16 +429,65 @@ table.bundlelist td
     padding-right: 2em;
 }
 
-/* forms that appear for a patch */
-div.patchform {
-    border: thin solid #080808;
-    padding-left: 0.6em;
-    padding-right: 0.6em;
-    float: left;
-    margin: 0.5em 5em 0.5em 10px;
+.patch-list-actions {
+    width: 100%;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
-div.patchform h3 {
+/* forms that appear for a patch */
+.patch-forms {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin: 16px 0;
+}
+
+div.patch-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+select[class^=change-property-], .archive-patch-select, .add-bundle {
+    padding: 4px;
+    margin-right: 8px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: var(--light-color);
+}
+
+#patch-form-archive {
+    display: flex;
+    align-items: center;
+    margin-right: 4px;
+}
+
+#patch-form-archive > label {
+    margin: 0px;
+}
+
+#patch-form-archive > select, #patch-form-archive > input {
+    margin: 0px 4px 0px 4px;
+}
+
+.patch-form-submit {
+    font-weight: bold;
+    padding: 4px;
+}
+
+#patch-form-bundle, #add-to-bundle, #remove-bundle {
+    margin-left: 16px;
+}
+
+.create-bundle {
+    padding: 4px;
+    margin-right: 8px;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+div.patch-form h3 {
     margin-top: 0em;
     margin-left: -0.6em;
     margin-right: -0.6em;
@@ -424,20 +497,22 @@ div.patchform h3 {
     font-size: 100%;
 }
 
-div.patchform ul {
+div.patch-form ul {
     list-style-type: none;
     padding-left: 0.2em;
     margin-top: 0em;
 }
 
-/* forms */
-table.form {
+.create-bundle {
+    padding: 4px;
+    margin-right: 8px;
+    box-sizing: border-box;
+    border-radius: 4px;
 }
 
 span.help_text {
     font-size: 80%;
 }
-
 
 table.form td {
     padding: 0.6em;
